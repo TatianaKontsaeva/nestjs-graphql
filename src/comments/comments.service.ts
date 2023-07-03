@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
+import { Comment } from './entities/comment.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CommentsService {
+  constructor(
+    @InjectRepository(Comment)
+    private repository: Repository<Comment>,
+  ) {}
+
   create(createCommentInput: CreateCommentInput) {
-    return 'This action adds a new comment';
+    return this.repository.save(createCommentInput);
   }
 
   findAll() {
-    return `This action returns all comments`;
+    return this.repository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} comment`;
+    return this.repository.findOneBy({ id });
   }
 
   update(id: number, updateCommentInput: UpdateCommentInput) {
-    return `This action updates a #${id} comment`;
+    return this.repository.save({id, ...updateCommentInput});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: number) {
+    await this.repository.delete(id);
   }
 }
