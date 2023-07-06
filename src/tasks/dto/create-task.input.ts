@@ -2,12 +2,10 @@ import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreateTaskInput {
-  @Field()
-  id: number;
-
-  @Field()
+  @Field({ nullable: false })
   title: string;
 
   @Field()
   description: string;
 }
+
